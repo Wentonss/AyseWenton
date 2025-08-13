@@ -1,0 +1,159 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aşkımızın Süresi</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #000;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #fff;
+        }
+        
+        #hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            color: rgba(255, 50, 50, 0.7);
+            animation: fall linear infinite;
+        }
+        
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+            }
+        }
+        
+        .container {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(255, 0, 100, 0.5);
+            max-width: 500px;
+            width: 90%;
+        }
+        
+        h1 {
+            color: #ff4081;
+            margin-bottom: 30px;
+            font-size: 2em;
+            text-shadow: 0 0 10px rgba(255, 0, 100, 0.8);
+        }
+        
+        .counter {
+            font-size: 1.8em;
+            margin: 15px 0;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+        }
+        
+        .date {
+            font-style: italic;
+            margin-top: 30px;
+            color: #aaa;
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+    <div id="hearts"></div>
+    
+    <div class="container">
+        <h1>🤍</h1>
+        
+        <div class="counter" id="days">0 gün</div>
+        <div class="counter" id="hours">0 saat</div>
+        <div class="counter" id="minutes">0 dakika</div>
+        <div class="counter" id="seconds">0 saniye</div>
+        
+        <div class="date">27 Mayıs 2025, 14:26'dan beri</div>
+    </div>
+
+    <script>
+        // Kalp yağmuru oluşturma
+        function createHearts() {
+            const heartsContainer = document.getElementById('hearts');
+            const heartCount = 50;
+            
+            for (let i = 0; i < heartCount; i++) {
+                const heart = document.createElement('div');
+                heart.innerHTML = '💗';
+                heart.classList.add('heart');
+                
+                // Rastgele pozisyon ve animasyon süresi
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.top = -20 + 'px';
+                heart.style.animationDuration = Math.random() * 3 + 5 + 's';
+                heart.style.opacity = Math.random() * 0.5 + 0.3;
+                heart.style.fontSize = Math.random() * 20 + 15 + 'px';
+                
+                heartsContainer.appendChild(heart);
+                
+                // Animasyon bitince tekrar yukarı gönder
+                heart.addEventListener('animationiteration', () => {
+                    heart.style.left = Math.random() * 100 + 'vw';
+                    heart.style.top = -20 + 'px';
+                });
+            }
+        }
+        
+        // Sayaç güncelleme fonksiyonu
+        function updateCounter() {
+            const startDate = new Date(2025, 4, 27, 14, 26, 0); // 27 Mayıs 2025, 14:26
+            const now = new Date();
+            const diff = now - startDate;
+            
+            if (diff < 0) {
+                // Henüz başlamadıysa
+                document.getElementById("days").textContent = "Henüz başlamadı";
+                document.getElementById("hours").textContent = "";
+                document.getElementById("minutes").textContent = "";
+                document.getElementById("seconds").textContent = "";
+                return;
+            }
+            
+            // Zaman hesaplamaları
+            const secondsTotal = Math.floor(diff / 1000);
+            const minutesTotal = Math.floor(secondsTotal / 60);
+            const hoursTotal = Math.floor(minutesTotal / 60);
+            const daysTotal = Math.floor(hoursTotal / 24);
+            
+            const hours = hoursTotal % 24;
+            const minutes = minutesTotal % 60;
+            const seconds = secondsTotal % 60;
+            
+            // Ekrana yazdır
+            document.getElementById("days").textContent = `${daysTotal} gün`;
+            document.getElementById("hours").textContent = `${hours} saat`;
+            document.getElementById("minutes").textContent = `${minutes} dakika`;
+            document.getElementById("seconds").textContent = `${seconds} saniye`;
+        }
+        
+        // Sayfa yüklendiğinde çalıştır
+        window.onload = function() {
+            createHearts();
+            updateCounter();
+            setInterval(updateCounter, 1000);
+        };
+    </script>
+</body>
+</html>
